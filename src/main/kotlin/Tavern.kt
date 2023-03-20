@@ -11,18 +11,18 @@ private val menuData = File("data/tavern-menu-data.txt")
     .split('\n')
     .sorted()
 
-private val menuItems = List(menuData.size) { index ->
-    val (_, name, _) = menuData[index].split(',')
+private val menuItems = menuData.map { menuEntry: String ->
+    val (_, name, _) = menuEntry.split(',')
     name
 }
 
-private val menuItemPrices: Map<String, Double> = List(menuData.size) { index ->
-    val (_, name, price) = menuData[index].split(",")
+private val menuItemPrices = menuData.map {menuEntry: String ->
+    val (_, name, price) = menuEntry.split(',')
     name to price.toDouble()
 }.toMap()
 
-private val menuItemTypes: Map<String, String> = List(menuData.size) { index ->
-    val (type, name, _) = menuData[index].split(",")
+private val menuItemTypes = menuData.map {menuEntry: String ->
+    val (type, name, _) = menuEntry.split(',')
     name to type
 }.toMap()
 
