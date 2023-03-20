@@ -4,8 +4,8 @@ import kotlin.random.Random
 private const val TAVERN_MASTER = "Jaeger"
 private const val TAVERN_NAME = "$TAVERN_MASTER's Folly"
 
-private val firstNames = setOf("Alex", "Mordoc", "Sophie", "Tariq")
-private val lastNames = setOf("Ironfoot", "Fernsworth", "Baggins", "Downstrider")
+private val firstNames = setOf("Alex", "Mordoc", "Sophie", "Tariq", "Dzaychok", "Dzayka")
+private val lastNames = setOf("Ironfoot", "Fernsworth", "Baggins", "Downstrider", "Dzaichkizm", "Nyaaa")
 
 private val menuData = File("data/tavern-menu-data.txt")
     .readText()
@@ -39,7 +39,14 @@ fun visitTavern() {
     narrate("$heroName sees several patrons in the tavern:")
     narrate(patrons.joinToString())
 
-    val itemOfTheDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
+    val itemOfTheDay = patrons.flatMap { getFavoriteMenuItems(it) }
+        .fold(mutableMapOf<String,Int>()) { map, element ->
+        map[element] = map.getOrDefault(element, 0) + 1
+        map
+    }.maxByOrNull { it.value }!!
+        .key
+
+//    val itemOfTheDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
     println("The item of the day is $itemOfTheDay")
 
     displayPatronBalances(patronGold)
