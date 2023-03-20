@@ -1,2 +1,2 @@
 # NyetHack
-Educational Kotlin Project (BigNerdRanch)
+Educational Kotlin Project (BigNerdRanch) - Text Game
