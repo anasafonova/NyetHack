@@ -1,3 +1,5 @@
+package com.bignerdranch.nyethack
+
 import java.io.File
 import kotlin.random.Random
 
@@ -17,7 +19,7 @@ private val menuItems = menuData.map { (_, name, _) -> name }
 
 private val menuItemPrices = menuData.associate { (_, name, price) -> name to price.toDouble() }
 
-private val menuItemTypes = menuData.associate {  (type, name, _) -> name to type }
+private val menuItemTypes = menuData.associate { (type, name, _) -> name to type }
 
 fun visitTavern() {
     narrate("${player.name} enters $TAVERN_NAME")
@@ -46,7 +48,7 @@ fun visitTavern() {
     }.maxByOrNull { it.value }!!
         .key
 
-//    val itemOfTheDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
+//    val itemOfTheDay = patrons.flatMap { com.bignerdranch.nyethack.getFavoriteMenuItems(it) }.random()
     println("The item of the day is $itemOfTheDay")
 
     displayPatronBalances(patronGold)

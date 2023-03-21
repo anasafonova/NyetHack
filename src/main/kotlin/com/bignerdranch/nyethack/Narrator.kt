@@ -1,3 +1,5 @@
+package com.bignerdranch.nyethack
+
 import kotlin.random.Random
 
 var narrationModifier: (String) -> String = { it }
