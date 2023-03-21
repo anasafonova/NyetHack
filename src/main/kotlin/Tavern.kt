@@ -20,7 +20,7 @@ private val menuItemPrices = menuData.associate { (_, name, price) -> name to pr
 private val menuItemTypes = menuData.associate {  (type, name, _) -> name to type }
 
 fun visitTavern() {
-    narrate("$heroName enters $TAVERN_NAME")
+    narrate("${player.name} enters $TAVERN_NAME")
     narrate("There are several items for sale:")
     println(menuItems.joinToString())
 
@@ -30,13 +30,13 @@ fun visitTavern() {
 
     val patronGold = mutableMapOf(
         TAVERN_MASTER to 86.00,
-        heroName to 4.50,
+        player.name to 4.50,
         *patrons.map { it to 6.0 }.toTypedArray()
     )
 
     showMenu()
 
-    narrate("$heroName sees several patrons in the tavern:")
+    narrate("${player.name} sees several patrons in the tavern:")
     narrate(patrons.joinToString())
 
     val itemOfTheDay = patrons.flatMap { getFavoriteMenuItems(it) }
@@ -61,7 +61,7 @@ fun visitTavern() {
             patronGold -= departingPatrons.toSet()
             patrons -= departingPatrons.toSet()
         }.forEach {  patron ->
-            narrate("$heroName sees $patron departing the tavern")
+            narrate("${player.name} sees $patron departing the tavern")
         }
 
     narrate("There are still several patrons in the tavern:")
@@ -124,7 +124,7 @@ private fun placeOrder(
 fun displayPatronBalances(
     patronGold: Map<String, Double>
 ) {
-    narrate("$heroName intuitively knows how much money each patron has")
+    narrate("${player.name} intuitively knows how much money each patron has")
     patronGold.forEach { (patron, balance) ->
         narrate("$patron has ${"%.2f".format(balance)} gold")
     }
