@@ -40,6 +40,8 @@ private fun promptHeroName(): String {
 //private fun makeYellow(message: String) = "\u001b[33;1m$message\u001b[0m"
 
 object Game {
+    private var isLaunched: Boolean = false
+
     private val worldMap = listOf(
         listOf(TownSquare(), Tavern(), Room("Back Room")),
         listOf(Room("A Long Corridor"), Room("A Generic Room")),
@@ -49,6 +51,7 @@ object Game {
     private var currentRoom: Room = worldMap[0][0]
     private var currentPosition = Coordinate(0, 0)
     init {
+        isLaunched = true
         narrate("Welcome, adventurer")
         narrate("${player.name} is ${player.title}")
         player.prophesize()
@@ -61,7 +64,7 @@ object Game {
     }
 
     fun play() {
-        while (true) {
+        while (isLaunched) {
             narrate("${player.name} of ${player.hometown}, ${player.title}, is in ${currentRoom.description()}")
             currentRoom.enterRoom()
 
@@ -83,6 +86,38 @@ object Game {
         }
     }
 
+    fun castSpell(spell: String) {
+        when (spell) {
+            "fireball" -> player.castFireball()
+            else -> narrate("You cannot cast $spell")
+        }
+    }
+
+    fun prophesize() {
+        player.prophesize()
+    }
+
+    fun map() {
+        val asciiMap = worldMap.mapIndexed { y, row ->
+            row.mapIndexed { x, room ->
+                when (currentPosition) {
+                    Coordinate(x, y) -> "X"
+                    else -> "O"
+                }
+            }.joinToString("  ")
+        }.joinToString("\n")
+        narrate("Current hero's position:")
+        println(asciiMap)
+    }
+
+    fun ringBell() {
+        if (currentRoom is TownSquare) {
+            (currentRoom as TownSquare).ringBell()
+        } else {
+            narrate("You cannot ring bell here.\nYou need to go to the Town Square")
+        }
+    }
+
     private class GameInput(arg: String?) {
         private val input = arg ?: ""
         val command = input.split(" ")[0]
@@ -97,6 +132,23 @@ object Game {
                 } else {
                     narrate("I don't know what direction that is")
                 }
+            }
+            "map" -> {
+                map()
+            }
+            "cast" -> {
+                val spell = argument.lowercase()
+                castSpell(spell)
+            }
+            "prophesize" -> {
+                prophesize()
+            }
+            "ring" -> {
+                ringBell()
+            }
+            "quit", "exit" -> {
+                isLaunched = false
+                narrate("Goodbye, Immortal ${player.name}, see you soon!")
             }
             else -> narrate("I'm not sure what you're trying to do")
         }
