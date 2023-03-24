@@ -1,5 +1,7 @@
 package com.bignerdranch.nyethack
 
+import kotlin.system.exitProcess
+
 const val TOO_MANY_SYMBOLS = 7
 lateinit var player: Player
 
@@ -43,9 +45,9 @@ object Game {
     private var isLaunched: Boolean = false
 
     private val worldMap = listOf(
-        listOf(TownSquare(), Tavern(), Room("Back Room")),
-        listOf(Room("A Long Corridor"), Room("A Generic Room")),
-        listOf(Room("The Dungeon"))
+        listOf(TownSquare(), Tavern(), Room("Back Room"), MonsterRoom("The Hall"), Room("Jaeger's Apartment")),
+        listOf(MonsterRoom("A Long Corridor"), Room("A Generic Room"), Tavern(), MonsterRoom("The Attic"), MonsterRoom("Wardrobe")),
+        listOf(MonsterRoom("The Dungeon"), MonsterRoom("Basement"), Room("Living Room"), MonsterRoom("Bathroom"), MonsterRoom("Dzaychok's Apartment"))
     )
 
     private var currentRoom: Room = worldMap[0][0]
@@ -97,6 +99,31 @@ object Game {
         player.prophesize()
     }
 
+    fun fight() {
+        val monsterRoom = currentRoom as? MonsterRoom
+        val currentMonster = monsterRoom?.monster
+        if (currentMonster == null) {
+            narrate("There's nothing to fight here")
+            return
+        }
+
+        while (player.healthPoints > 0 && currentMonster.healthPoints > 0) {
+            player.attack(currentMonster)
+            if (currentMonster.healthPoints > 0) {
+                currentMonster.attack(player)
+            }
+            Thread.sleep(1000)
+        }
+
+        if (player.healthPoints <= 0) {
+            narrate("You have been defeated! Thanks for playing")
+            exitProcess(0)
+        } else {
+            narrate("${currentMonster.name} has been defeated")
+            monsterRoom.monster = null
+        }
+    }
+
     fun map() {
         val asciiMap = worldMap.mapIndexed { y, row ->
             row.mapIndexed { x, room ->
@@ -124,6 +151,7 @@ object Game {
         val argument = input.split(" ").getOrElse(1) { "" }
 
         fun processCommand() = when (command.lowercase()) {
+            "fight" -> fight()
             "move" -> {
                 val direction = Direction.values()
                     .firstOrNull { it.name.equals(argument, ignoreCase = true) }
@@ -133,19 +161,13 @@ object Game {
                     narrate("I don't know what direction that is")
                 }
             }
-            "map" -> {
-                map()
-            }
+            "map" -> map()
             "cast" -> {
                 val spell = argument.lowercase()
                 castSpell(spell)
             }
-            "prophesize" -> {
-                prophesize()
-            }
-            "ring" -> {
-                ringBell()
-            }
+            "prophesize" -> prophesize()
+            "ring" -> ringBell()
             "quit", "exit" -> {
                 isLaunched = false
                 narrate("Goodbye, Immortal ${player.name}, see you soon!")
