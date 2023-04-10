@@ -23,6 +23,8 @@ private val menuItemTypes = menuData.associate { (type, name, _) -> name to type
 
 class Tavern : Room(TAVERN_NAME) {
     override val status = "Busy"
+    override val lootBox: LootBox<Key> =
+        LootBox(Key("key to Nogartse's evil lair"))
 
     private val patrons: MutableSet<String> = firstNames.shuffled()
         .zip(lastNames.shuffled()) { firstName, lastName -> "$firstName $lastName" }
