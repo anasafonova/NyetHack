@@ -37,6 +37,10 @@ class Player(
         ).random()
     }
 
+    val inventory = mutableListOf<Loot>()
+
+    var gold = 0
+
     init {
         require(healthPoints > 0) { "healthPoints must be greater than zero" }
         require(name.isNotBlank()) { "Player must have a name" }
